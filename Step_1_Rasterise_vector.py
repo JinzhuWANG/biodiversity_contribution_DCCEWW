@@ -1,9 +1,9 @@
-
 import numpy as np
 import geopandas as gpd
 import rasterio.features
 import rioxarray as rxr
 import xarray
+import h5py
 
 from itertools import repeat
 from joblib import Parallel, delayed
@@ -66,6 +66,11 @@ raster_arr_xr = xarray.DataArray(
 )
 
 
+# Save to nc
+raster_arr_xr.rio.set_crs(ref_crs)
+encoding = {'data': {"compression": "gzip", "compression_opts": 9,  "dtype": np.bool_}} 
+raster_arr_xr.name = 'data'
+raster_arr_xr.to_netcdf(f'output/DCEWW_bio.nc', mode='w', encoding=encoding, engine='h5netcdf')
 
 
 
